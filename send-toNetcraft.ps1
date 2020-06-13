@@ -49,7 +49,7 @@
 
 ## Submit
     try {
-        $Invoke = Invoke-WebRequest -Uri $URI -Method Post -body $form -ContentType "application/json" #-ErrorAction SilentlyContinue
+        $Invoke = Invoke-WebRequest -Uri $URI -Method Post -body $form -ContentType "application/json"
         $result = $Invoke.Content | ConvertFrom-Json
     }
     catch {
