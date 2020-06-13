@@ -3,13 +3,9 @@ Use the NetCraft API to send URLs to Netcraft to report as phishing sites (https
 Change parameters on the following lines:  
 - 20: $prod or $test
 - 24: email address you are submitting as
-- 27: reason for submitting
-  
-> Currently we accept reports of phishing, malware, web shell and phishing kit URLs.  
+- 27: reason for submitting (Currently we accept reports of phishing, malware, web shell and phishing kit URLs. - https://report.netcraft.com/report)  
 
-https://report.netcraft.com/report  
-
-To use from CLI:  
+## To use from CLI:  
 - Mandatory parameter
   - -u: URL
 - These are considered optional parameters because they can be hard-coded in your .ps1 file: 
