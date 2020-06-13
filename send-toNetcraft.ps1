@@ -3,23 +3,33 @@
 ## 11-JUN-2020
 ## Netcraft public API: https://report.netcraft.com/api/v2#tag/report/paths/~1report~1urls/post
 
+## Accept CLI parameters
+    param ($u, $e, $r)
+
 ## Set TLS 1.2
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+## Null some variables
+    $Invoke = $null
+    $result = $null
 
 ## Define possible endpoints, assign the one you want to use
     $test = "https://report.netcraft.com/api/v2/report/urls"
     $prod = "https://report.netcraft.com/api/v2/test/report/urls"
-    $URI  = $prod
+    
+    $URI  = $test
 
 ## Assign your variables 
-    $email  = "you@your.com"
-    $reason = "phish"
+    if ($e) {$email = $e}
+    else {$email = "you@your.com"}
 
-## Enter your URLs here (up to 1000 URLs per submission are permitted)
-    $URLs = @(  
-                "https://badguys.com/fake/o365/login.htm",
-                "https://somethingelse.com/lets/go/phishing.php"
-                )
+    if ($r) {$reason = $r}
+    else {$reason = "phish"}
+
+## Enter your URLs here unless you're passing from CLI (up to 1000 URLs per submission are permitted)
+    if ($u) {$URLs = @($u)}
+    else    {$URLs = @("https://badguys.com/fake/o365/login.htm",
+                       "https://somethingelse.com/lets/go/phishing.php")}  
 
 ## Null out variable, create and assign members, then convert to JSON
     $form = $null
@@ -31,28 +41,35 @@
  
 ## Show what you are submitting
     Write-Host "======================="
-    Write-Host "Submitting"
-    foreach ($url in $URLs) {write-host -f cyan "  " $url}
+    Write-Host "Submitting    :"
+    foreach ($url in $URLs) {Write-Host -f cyan "  " $url}
+    Write-Host "with address  :" $email
+    Write-Host "for reason    :" $reason
+    Write-Host "======================="
 
 ## Submit
-    $Invoke = Invoke-WebRequest  -Uri $URI -Method Post -body $form -ContentType application/json
-
+    try {
+        $Invoke = Invoke-WebRequest -Uri $URI -Method Post -body $form -ContentType "application/json" #-ErrorAction SilentlyContinue
+        $result = $Invoke.Content | ConvertFrom-Json
+    }
+    catch {
+        $result = $_.errorDetails | ConvertFrom-Json
+    }
+    
 ## Analyze response
-    $result = $Invoke.Content | ConvertFrom-Json
-
     if ($invoke.StatusCode -eq "200")
         {
             ## Build Result URL
                 $ResultURL = "https://report.netcraft.com/submission/" + $result.uuid
 
             ## Display useful information
-                write-host "Result Status : " -nonewline; write-host -f Green $invoke.StatusCode
-                write-host "Result Message: " -NoNewline; write-host -f Green $result.message
-                write-host "Result UUID   : " -NoNewline; write-host -f Green $result.uuid
-                Write-Host "Submission URL: " -NoNewline; write-host -f Green $ResultURL
+                Write-Host "Result Status : " -nonewline; Write-Host -f Green $invoke.StatusCode
+                Write-Host "Result Message: " -NoNewline; Write-Host -f Green $result.message
+                Write-Host "Result UUID   : " -NoNewline; Write-Host -f Green $result.uuid
+                Write-Host "Submission URL: " -NoNewline; Write-Host -f Blue  $ResultURL
         }
     else 
         {
-            write-host "Result Status : " -nonewline; write-host -f Yellow $invoke.StatusCode
-            write-host "Result Message: " -NoNewline; write-host -f Yellow $result.message
+            Write-Host "Result Status : " -nonewline; Write-Host -f Yellow $result.status
+            Write-Host "Result Message: " -NoNewline; Write-Host -f Yellow $result.details.message
         }
