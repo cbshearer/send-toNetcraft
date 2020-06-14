@@ -17,5 +17,5 @@
 ```
 .\send-toNetcraft.ps1 -u https://superfake.com/really/really/awful.php  
 .\send-toNetcraft.ps1 -u https://veryphishy.buzz/very/phishy/o365.html -e you@your.com -r phishing  
-.\send-toNetcraft.ps1 -u https://veryphishy.buzz/very/phishy.zip -e you@your.com -r "phishing kit"
+.\send-toNetcraft.ps1 -u https://veryphishy.buzz/very/phishy.zip -r "phishing kit"
 ```
