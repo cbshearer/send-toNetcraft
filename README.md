@@ -17,8 +17,8 @@
   - -r: Reason for reporting  
 - Examples:   
 ```
-.\send-toNetcraft.ps1 -u https://superfake.com/really/really/awful.php  
+.\send-toNetcraft.ps1 -u http://superfake.com/really/really/awful.php  
 .\send-toNetcraft.ps1 -u https://veryphishy.buzz/very/phishy/o365.html -e you@your.com -r phishing  
 .\send-toNetcraft.ps1 -u https://veryphishy.buzz/very/phishy.zip -r "phishing kit"
-.\send-toNetcraft.ps1 -u https://veryphishy.buzz/very/phishy.php,reallylame.xyz/badstuff.asp
+.\send-toNetcraft.ps1 -u www.badguyz.top/very/badstuff.php,reallylame.xyz/badstuff.asp
 ```
