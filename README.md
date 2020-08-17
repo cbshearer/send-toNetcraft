@@ -11,6 +11,7 @@
 ## To use from CLI:  
 - Mandatory parameter
   - -u: URL
+  - Comma separated for multiple
 - These are considered optional parameters. They can be hard-coded in your .ps1 file (lines 24 & 27 as noted above): 
   - -e: Email address to report as
   - -r: Reason for reporting  
@@ -19,4 +20,5 @@
 .\send-toNetcraft.ps1 -u https://superfake.com/really/really/awful.php  
 .\send-toNetcraft.ps1 -u https://veryphishy.buzz/very/phishy/o365.html -e you@your.com -r phishing  
 .\send-toNetcraft.ps1 -u https://veryphishy.buzz/very/phishy.zip -r "phishing kit"
+.\send-toNetcraft.ps1 -u https://veryphishy.buzz/very/phishy.php,reallylame.xyz/badstuff.asp
 ```
