@@ -6,7 +6,9 @@
 - Change parameters on the following lines:  
   - 20: Pick the $prod or $test URI endpoint
   - 24: Email address you are submitting as
-  - 27: Reason for submitting (Currently we accept reports of phishing, malware, web shell and phishing kit URLs. - https://report.netcraft.com/report)  
+  - 27: Reason for submitting 
+    - Currently we (Netcraft) accept reports of phishing, malware, web shell and phishing kit URLs (https://report.netcraft.com/report).
+    - Default value of "phish" is specified by this script.
 
 ## To use from CLI:  
 - Mandatory parameter
