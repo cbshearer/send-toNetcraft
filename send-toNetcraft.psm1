@@ -61,8 +61,8 @@ function send-toNetcraft {
         $result = $null
     
     ## Define possible endpoints, assign the one you want to use
-        $test = "https://report.netcraft.com/api/v2/report/urls"
-        $prod = "https://report.netcraft.com/api/v2/test/report/urls"
+        $prod = "https://report.netcraft.com/api/v2/report/urls"
+        $test = "https://report.netcraft.com/api/v2/test/report/urls"
         
         $URI  = $prod
     
