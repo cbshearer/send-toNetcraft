@@ -2,7 +2,7 @@
 ## Chris Shearer
 ## 17-AUG-2020
 ## Netcraft public API: https://report.netcraft.com/api/v2#tag/report/paths/~1report~1urls/post
-## Github repository for this modeule: https://github.com/cbshearer/send-toNetcraft
+## Github repository for this module: https://github.com/cbshearer/send-toNetcraft
 
 function send-toNetcraft {
 
