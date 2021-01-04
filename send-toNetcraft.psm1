@@ -1,6 +1,6 @@
 ## Report phishing URL to Netcraft - the Module
 ## Chris Shearer
-## 17-AUG-2020
+## 3-JAN-2021
 ## Netcraft public API: https://report.netcraft.com/api/v2#tag/report/paths/~1report~1urls/post
 ## Github repository for this module: https://github.com/cbshearer/send-toNetcraft
 
@@ -24,6 +24,7 @@ function send-toNetcraft {
     URL as parameter -u.
     An e-mail address as parameter -e.
     A reason as parameter -r.
+    Reason default is 'phish', use 'pk' as an alias for 'phishing kit'
     .Outputs
     Result code of submission.
     Result message of submission.
@@ -34,13 +35,16 @@ function send-toNetcraft {
      send-toNetcraft -u http://superfake.com/really/really/awful.php
     .Example
      # Submit a URL, also specifying an email address and a reason
-     send-toNetcraft -u https://veryphishy.buzz/very/phishy/o365.html -e you@your.com -r phishing
+     send-toNetcraft -u https://veryphishy.buzz/very/phishy/o365.html -e some@example.com -r phishing
     .Example
      # Submit a URL, specifying only a reason
      send-toNetcraft -u https://veryphishy.buzz/very/phishy.zip -r "phishing kit"
     .Example
      # Submit multiple URLs
      send-toNetcraft -u www.badguyz.top/very/badstuff.php,reallylame.xyz/badstuff.asp
+    .Example
+     # Submit a URL, using the reason 'pk' as an alias for 'phishing kit'
+     send-toNetcraft -u www.scams-r-us.xyz/folder1/folder1.zip -r pk
     #>
     
     ## Accept CLI parameters 
@@ -68,6 +72,7 @@ function send-toNetcraft {
     
     ## Assign your variables 
         $email = $e
+        if ($r = "pk") {$r = "phishing kit"}
         $reason = $r
     
     ## Enter your URLs here (up to 1000 URLs per submission are permitted). If one is supplied as a parameter, use that, otherwise you can specify arrays for analysis.
@@ -84,11 +89,11 @@ function send-toNetcraft {
      
     ## Show what you are submitting
         Write-Host "======================="
-        Write-host "URL Count     :" $u.count
+        Write-host "URL count     :" $u.count
         Write-Host "Submitting    :"
         foreach ($url in $URLs) {Write-Host -f cyan "  " $url}
-        Write-Host "with address  :" $email
-        Write-Host "for reason    :" $reason
+        Write-Host "Email address :" $email
+        Write-Host "For reason    :" $reason
         Write-Host "======================="
     
     ## Submit
@@ -107,8 +112,8 @@ function send-toNetcraft {
                     $ResultURL = "https://report.netcraft.com/submission/" + $result.uuid
     
                 ## Display useful information
-                    Write-Host "Result Status : " -nonewline; Write-Host -f Green $invoke.StatusCode
-                    Write-Host "Result Message: " -NoNewline; Write-Host -f Green $result.message
+                    Write-Host "Result status : " -nonewline; Write-Host -f Green $invoke.StatusCode
+                    Write-Host "Result message: " -NoNewline; Write-Host -f Green $result.message
                     Write-Host "Result UUID   : " -NoNewline; Write-Host -f Green $result.uuid
                     Write-Host "Submission URL: " -NoNewline; Write-Host -f Blue  $ResultURL
             }
