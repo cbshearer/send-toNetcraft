@@ -72,7 +72,7 @@ function send-toNetcraft {
     
     ## Assign your variables 
         $email = $e
-        if ($r = "pk") {$r = "phishing kit"}
+        if ($r -eq "pk") {$r = "phishing kit"}
         $reason = $r
     
     ## Enter your URLs here (up to 1000 URLs per submission are permitted). If one is supplied as a parameter, use that, otherwise you can specify arrays for analysis.
