@@ -52,7 +52,7 @@ function send-toNetcraft {
             # U is the URL which is mandatory
                 [Parameter(Mandatory=$true)] [array]$u, 
             # E is for e-mail address, which should be set here by the user so they don't have to enter it every time.
-                [string]$e = "you@your.com", 
+                [string]$e = "chris.shearer@apmortgage.com", 
             # R is for reason, which is set as phish by default
                 [string]$r = "phish"
             )
@@ -65,42 +65,30 @@ function send-toNetcraft {
         $result = $null
     
     ## Define possible endpoints, assign the one you want to use
-        $prod = "https://report.netcraft.com/api/v3/report/urls"
-        $test = "https://report.netcraft.com/api/v3/test/report/urls"
+        $prod = "https://report.netcraft.com/api/v2/report/urls"
+        #$test = "https://report.netcraft.com/api/v2/test/report/urls"
         
-        $URI  = $test
-        write-host "ITS THE NEW ONE DUMMMY"
+        $URI  = $prod
     
     ## Assign your variables 
         $email = $e
         ## if we used the 'pk' shorthand 'phishing kit' we translate that here before putting it into the $reason variable we will submit
             if ($r -eq "pk") {$r = "phishing kit"}
         $reason = $r
-$u = @("cnn.com","asdf.net")
+        $4xx_out = "c:\temp\send-tonetcraft-429s_$(get-date -f yyyy-MM-dd).csv"
+    
     ## Enter your URLs here (up to 1000 URLs per submission are permitted). If one is supplied as a parameter, use that, otherwise you can specify arrays for analysis.
         if ($u) {$URLs = @($u)}
         else    {$URLs = @()}
-        $nURLs = $null
-        $nURLs = New-Object -TypeName psobject
-        foreach ($URL in $URLs)
-            {
-                $nURLs += { "url" = $URL; "country" = "US";}
-            }
-        write-host "pre" $nurls "===="
-        $nURLs = $nURLs | ConvertTo-Json
-        write-host "post" $nurls "===="
-       # $nurls = "[" + $nurls + "]"
     
     ## Null out variable, create and assign members, then convert to JSON
         $form = $null
-    <#  $form = New-Object -TypeName psobject
+        $form = New-Object -TypeName psobject
         $form | Add-Member -MemberType NoteProperty -Name email  -Value $email
         $form | Add-Member -MemberType NoteProperty -Name reason -Value $reason
-        $form | Add-Member -MemberType NoteProperty -Name urls   -Value $nURLs
-        $form = $form | ConvertTo-Json #>
-       #$form = "{`"email`":`"$email`",`"urls`":[{`"url`":`"$url`",`"country`":`"US`"}]}"
-       $form = "{`"email`":`"$email`",`"reason`":`"$reason`",`"urls`":[$nurls]}"
-        
+        $form | Add-Member -MemberType NoteProperty -Name urls   -Value $URLs
+        $form = $form | ConvertTo-Json
+     
     ## Show what you are submitting
         Write-Host "======================="
         Write-host "URL count     :" $u.count
@@ -130,6 +118,12 @@ $u = @("cnn.com","asdf.net")
                     Write-Host "Result message: " -NoNewline; Write-Host -f Green $result.message
                     Write-Host "Result UUID   : " -NoNewline; Write-Host -f Green $result.uuid
                     Write-Host "Submission URL: " -NoNewline; Write-Host -f Blue  $ResultURL
+            }
+        elseif (($result.statuscode -eq "429") -or ($result.statuscode -eq "403"))
+            {
+                ## save it to resubmit later
+                    $urls | Export-Csv $4xx_out -NoTypeInformation -Append
+                    write-host "429 error, saving to " -NoNewline; write-host -f Cyan $4xx_out
             }
         else 
             {
